@@ -48,14 +48,15 @@ public class ArmorToggleButton extends Button {
         int y = getY();
 
         graphics.pose().pushPose();
-        graphics.pose().translate(x, y, 0);
+        // Lift above the inventory player model (drawn from z=50 with depth) but below tooltips (z=400).
+        graphics.pose().translate(x, y, 200);
         graphics.pose().scale(SIZE / 16.0f, SIZE / 16.0f, 1.0f);
         graphics.renderFakeItem(ICON, 0, 0);
         graphics.pose().popPose();
 
         if (armorHidden) {
             graphics.pose().pushPose();
-            graphics.pose().translate(0, 0, 200);
+            graphics.pose().translate(0, 0, 380);
             for (int i = 1; i < SIZE - 1; i++) {
                 graphics.fill(x + i, y + SIZE - 1 - i, x + i + 1, y + SIZE - i, 0xFFE03030);
             }

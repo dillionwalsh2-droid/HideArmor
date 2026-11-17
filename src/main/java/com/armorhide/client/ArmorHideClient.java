@@ -31,9 +31,9 @@ public class ArmorHideClient {
         }
     }
 
-    // Top-left of the player preview, one row below where Curios/Baubles draws its 10x10 icon (+27, +9).
-    private static final int ICON_OFFSET_X = 27;
-    private static final int ICON_OFFSET_Y = 21;
+    // Top-right corner inside the player preview box (+26,+8 .. +75,+78).
+    private static final int ICON_OFFSET_X = 64;
+    private static final int ICON_OFFSET_Y = 9;
 
     private static void addIconButton(ScreenEvent.Init.Post event, InventoryScreen screen) {
         var player = screen.getMinecraft().player;

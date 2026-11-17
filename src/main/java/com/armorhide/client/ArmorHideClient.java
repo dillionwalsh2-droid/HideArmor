@@ -24,12 +24,34 @@ public class ArmorHideClient {
     @SubscribeEvent
     static void onScreenInit(ScreenEvent.Init.Post event) {
         if (event.getScreen() instanceof InventoryScreen screen) {
-            // Right of the player paper-doll / left of the 2x2 crafting grid.
-            addToggleButton(event, screen.getGuiLeft() + 126, screen.getGuiTop() + 58, 70, screen.getMinecraft().player);
+            addIconButton(event, screen);
         } else if (event.getScreen() instanceof CreativeModeInventoryScreen screen) {
             // Inside the creative panel bottom strip (195x136), clear of the item grid.
             addToggleButton(event, screen.getGuiLeft() + 128, screen.getGuiTop() + 112, 62, screen.getMinecraft().player);
         }
+    }
+
+    // Top-left of the player preview, one row below where Curios/Baubles draws its 10x10 icon (+27, +9).
+    private static final int ICON_OFFSET_X = 27;
+    private static final int ICON_OFFSET_Y = 21;
+
+    private static void addIconButton(ScreenEvent.Init.Post event, InventoryScreen screen) {
+        var player = screen.getMinecraft().player;
+        if (player == null) {
+            return;
+        }
+        boolean hidden = ModAttachments.isArmorHidden(player);
+        ArmorToggleButton button = new ArmorToggleButton(screen, ICON_OFFSET_X, ICON_OFFSET_Y, hidden, label(hidden), b -> {
+            PacketDistributor.sendToServer(new ToggleArmorHidePayload());
+            boolean next = !ModAttachments.isArmorHidden(player);
+            ModAttachments.setArmorHidden(player, next);
+            ArmorToggleButton self = (ArmorToggleButton) b;
+            self.setArmorHidden(next);
+            self.setMessage(label(next));
+            self.setTooltip(Tooltip.create(label(next)));
+        });
+        button.setTooltip(Tooltip.create(label(hidden)));
+        event.addListener(button);
     }
 
     private static void addToggleButton(ScreenEvent.Init.Post event, int x, int y, int width,

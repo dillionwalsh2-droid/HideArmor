@@ -3,6 +3,7 @@ package com.armorhide.client;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -13,7 +14,13 @@ import net.minecraft.world.item.Items;
  */
 public class ArmorToggleButton extends Button {
     public static final int SIZE = 10;
-    private static final ItemStack ICON = new ItemStack(Items.IRON_CHESTPLATE);
+    private static final ItemStack ICON = createIcon();
+
+    private static ItemStack createIcon() {
+        ItemStack stack = new ItemStack(Items.DIAMOND_CHESTPLATE);
+        stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
+        return stack;
+    }
 
     private final AbstractContainerScreen<?> screen;
     private final int offsetX;
@@ -40,13 +47,9 @@ public class ArmorToggleButton extends Button {
         int x = getX();
         int y = getY();
 
-        int border = isHoveredOrFocused() ? 0xFFFFFFFF : 0xFF212121;
-        graphics.fill(x, y, x + SIZE, y + SIZE, border);
-        graphics.fill(x + 1, y + 1, x + SIZE - 1, y + SIZE - 1, 0xFF8B8B8B);
-
         graphics.pose().pushPose();
-        graphics.pose().translate(x + 1, y + 1, 0);
-        graphics.pose().scale(0.5f, 0.5f, 1.0f);
+        graphics.pose().translate(x, y, 0);
+        graphics.pose().scale(SIZE / 16.0f, SIZE / 16.0f, 1.0f);
         graphics.renderFakeItem(ICON, 0, 0);
         graphics.pose().popPose();
 

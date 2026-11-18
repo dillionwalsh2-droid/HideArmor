@@ -7,16 +7,19 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 @Mod(value = ArmorHide.MOD_ID, dist = Dist.CLIENT)
 @EventBusSubscriber(modid = ArmorHide.MOD_ID, value = Dist.CLIENT)
 public class ArmorHideClient {
-    public ArmorHideClient() {
+    public ArmorHideClient(IEventBus modEventBus) {
+        modEventBus.addListener(FMLClientSetupEvent.class, event -> event.enqueueWork(PunchyCompat::register));
     }
 
     @SubscribeEvent
